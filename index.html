@@ -14,6 +14,16 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   </head>
   <body>
+    <div class="intro-screen" id="introScreen" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introHint">
+      <div class="intro-card">
+        <div class="intro-symbol" aria-hidden="true">✿</div>
+        <p class="intro-eyebrow">MỘT MÓN QUÀ NHỎ · 28.10</p>
+        <h1 id="introTitle">Gửi Dạ Thảo <span>♡</span></h1>
+        <p id="introHint">Chạm để mở món quà, ngắm từng bông hoa nở và nghe giai điệu Happy Birthday bằng piano.</p>
+        <button class="intro-play" id="openWithMusicButton" type="button">♫ Mở thiệp &amp; nghe piano</button>
+        <button class="intro-silent" id="openSilentButton" type="button">Xem không có nhạc</button>
+      </div>
+    </div>
     <div class="backdrop" aria-hidden="true">
       <div class="aurora aurora-one"></div>
       <div class="aurora aurora-two"></div>
@@ -30,6 +40,7 @@
           <button class="reset-button" id="resetButton" type="button" aria-label="Xem lại từ đầu" title="Xem lại từ đầu">↻</button>
         </div>
       </header>
+      <p class="music-notice" id="musicNotice" role="status" aria-live="polite" hidden></p>
 
       <section class="scene scene-flowers" id="flowerScene" aria-labelledby="flowerTitle">
         <div class="flower-stage" aria-label="Bó hoa đang dần nở theo từng chữ trong tên Dạ Thảo">

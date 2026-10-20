@@ -4,7 +4,10 @@ const TARGET_NAME = "Trần Ngọc Dạ Thảo";
 const BIRTH_YEAR = 2007;
 const BIRTH_MONTH = 9; // October, zero-based for JavaScript dates.
 const BIRTH_DAY = 28;
-const YEAR_STORY_DURATION = 2300;
+// Reduce Motion should simplify visual effects, not speed up the birthday wishes.
+const YEAR_STORY_DURATION = 3800;
+const NAME_LETTER_DURATION = 520;
+const NAME_SPACE_DURATION = 300;
 // Each theme produces a distinct annual bouquet. Future years continue cycling
 // through the palettes while the arrangement and flower families also change.
 const YEAR_THEMES = [
@@ -79,6 +82,8 @@ const typedName = document.getElementById("typedName");
 const keyboard = document.getElementById("flowerKeyboard");
 const animationStatus = document.getElementById("animationStatus");
 const musicButton = document.getElementById("musicButton");
+const musicNotice = document.getElementById("musicNotice");
+const introScreen = document.getElementById("introScreen");
 const cakeWrap = document.getElementById("cakeWrap");
 const blowCandlesButton = document.getElementById("blowCandlesButton");
 const wishReveal = document.getElementById("wishReveal");
@@ -99,6 +104,8 @@ let candlesBlown = false;
 let audioContext = null;
 let musicTimer = null;
 let musicPlaying = false;
+let musicStarting = false;
+let musicRequestId = 0;
 let pianoWave = null;
 let hammerBuffer = null;
 const activeNotes = new Set();
@@ -340,7 +347,7 @@ function scheduleNextYear() {
     yearStep++;
     if (yearStep >= celebrationYear - BIRTH_YEAR) showBirthday();
     else showYearStep();
-  }, prefersReducedMotion.matches ? 600 : YEAR_STORY_DURATION);
+  }, YEAR_STORY_DURATION);
 }
 
 function showYearStep() {
@@ -392,15 +399,15 @@ function animateName() {
   const typeNext = () => {
     if (index >= TARGET_NAME.length) {
       animationStatus.textContent = "♡ Một bó hoa dành riêng cho em đã hoàn thành";
-      nextSceneTimer = setTimeout(showYears, prefersReducedMotion.matches ? 1200 : 2700);
+      nextSceneTimer = setTimeout(showYears, 3300);
       return;
     }
     const char = TARGET_NAME[index++];
     if (char === " ") addSpace();
     else addLetter(char);
-    typingTimer = setTimeout(typeNext, prefersReducedMotion.matches ? 40 : char === " " ? 250 : 435);
+    typingTimer = setTimeout(typeNext, char === " " ? NAME_SPACE_DURATION : NAME_LETTER_DURATION);
   };
-  typingTimer = setTimeout(typeNext, prefersReducedMotion.matches ? 80 : 650);
+  typingTimer = setTimeout(typeNext, 650);
 }
 
 function showBirthday() {
@@ -474,7 +481,8 @@ function playPianoNote(note, time, duration, volume = 1) {
   const release = .24;
   const endTime = time + duration + release;
   const envelope = audioContext.createGain();
-  const peak = .095 * volume;
+  // A slightly stronger attack stays audible on small phone speakers.
+  const peak = .13 * volume;
   envelope.gain.setValueAtTime(.0001, time);
   envelope.gain.exponentialRampToValueAtTime(peak, time + .006);
   envelope.gain.exponentialRampToValueAtTime(peak * .42, time + Math.min(.13, duration * .6));
@@ -503,7 +511,7 @@ function playPianoNote(note, time, duration, volume = 1) {
   attack.type = "sine";
   attack.frequency.value = frequency * 2.008;
   attackGain.gain.setValueAtTime(.0001, time);
-  attackGain.gain.exponentialRampToValueAtTime(.014 * volume, time + .004);
+  attackGain.gain.exponentialRampToValueAtTime(.018 * volume, time + .004);
   attackGain.gain.exponentialRampToValueAtTime(.0001, time + .18);
   attack.connect(attackGain);
   attackGain.connect(audioContext.destination);
@@ -517,7 +525,7 @@ function playPianoNote(note, time, duration, volume = 1) {
   hammer.buffer = hammerBuffer;
   hammerFilter.type = "lowpass";
   hammerFilter.frequency.value = 2600;
-  hammerGain.gain.value = .018 * volume;
+  hammerGain.gain.value = .022 * volume;
   hammer.connect(hammerFilter);
   hammerFilter.connect(hammerGain);
   hammerGain.connect(audioContext.destination);
@@ -537,7 +545,7 @@ function playPianoNote(note, time, duration, volume = 1) {
 }
 
 function scheduleMelody() {
-  if (!musicPlaying || !audioContext || audioContext.state !== "running") return;
+  if (!musicPlaying || !audioContext || audioContext.state !== "running" || musicTimer !== null || document.hidden) return;
   const start = audioContext.currentTime + .08;
   let time = start;
   const beat = .44;
@@ -560,43 +568,127 @@ function scheduleMelody() {
       playPianoNote(note, start + beatOffset * beat + index * .07, beat * 1.6, index === 0 ? .64 : .32);
     });
   }
-  musicTimer = setTimeout(scheduleMelody, Math.round((time - start + .8) * 1000));
+  musicTimer = setTimeout(() => {
+    musicTimer = null;
+    scheduleMelody();
+  }, Math.round((time - start + .8) * 1000));
 }
 
-function stopMusic() {
-  musicPlaying = false;
+function clearScheduledMusic() {
   clearTimeout(musicTimer);
   musicTimer = null;
   for (const oscillator of activeNotes) {
     try { oscillator.stop(); } catch { /* The note has already finished. */ }
   }
   activeNotes.clear();
-  musicButton.setAttribute("aria-pressed", "false");
-  musicButton.setAttribute("aria-label", "Bật nhạc piano Happy Birthday");
-  musicButton.innerHTML = '♫ <span>Bật piano</span>';
-  musicButton.classList.remove("is-playing");
 }
 
-async function toggleMusic() {
-  if (musicPlaying) { stopMusic(); return; }
+function updateMusicButton(state) {
+  const playing = state === "playing";
+  musicButton.setAttribute("aria-pressed", String(playing));
+  musicButton.setAttribute("aria-label", playing ? "Tắt nhạc piano Happy Birthday" :
+    state === "resume" ? "Tiếp tục nhạc piano Happy Birthday" : "Bật nhạc piano Happy Birthday");
+  musicButton.innerHTML = playing ? '♫ <span>Tắt piano</span>' :
+    state === "resume" ? '♫ <span>Tiếp tục piano</span>' :
+    state === "starting" ? '♫ <span>Đang bật...</span>' : '♫ <span>Bật piano</span>';
+  musicButton.classList.toggle("is-playing", playing);
+}
+
+function showMusicNotice(message = "") {
+  musicNotice.hidden = !message;
+  musicNotice.textContent = message;
+}
+
+function stopMusic() {
+  musicRequestId++;
+  musicStarting = false;
+  musicPlaying = false;
+  clearScheduledMusic();
+  updateMusicButton("off");
+  showMusicNotice();
+}
+
+function handleAudioStateChange() {
+  if (!musicPlaying || musicStarting) return;
+  if (audioContext.state === "running" && !document.hidden) {
+    updateMusicButton("playing");
+    showMusicNotice();
+    scheduleMelody();
+  } else {
+    clearScheduledMusic();
+    updateMusicButton("resume");
+    if (!document.hidden) showMusicNotice("Nhạc đã tạm dừng. Chạm ‘Tiếp tục piano’ để nghe tiếp nhé ♫");
+  }
+}
+
+// iOS Safari only allows audio to be unlocked during a real touch/click.
+// Start a silent source synchronously inside that gesture, before any await.
+function unlockAudio() {
+  const oscillator = audioContext.createOscillator();
+  const silentGain = audioContext.createGain();
+  silentGain.gain.value = 0;
+  oscillator.connect(silentGain);
+  silentGain.connect(audioContext.destination);
+  oscillator.onended = () => {
+    oscillator.disconnect();
+    silentGain.disconnect();
+  };
+  oscillator.start();
+  oscillator.stop(audioContext.currentTime + .025);
+}
+
+async function startMusic() {
+  if (musicStarting) return;
+  const requestId = ++musicRequestId;
+  musicStarting = true;
   const Context = window.AudioContext || window.webkitAudioContext;
   if (!Context) {
-    musicButton.setAttribute("aria-label", "Trình duyệt không hỗ trợ phát nhạc");
+    musicStarting = false;
+    showMusicNotice("Trình duyệt này chưa hỗ trợ nhạc piano. Hãy thử Safari hoặc Chrome nhé.");
     return;
   }
   try {
-    if (!audioContext) audioContext = new Context();
-    await audioContext.resume();
+    if (!audioContext || audioContext.state === "closed") {
+      audioContext = new Context();
+      pianoWave = null;
+      hammerBuffer = null;
+      audioContext.addEventListener("statechange", handleAudioStateChange);
+    }
     preparePiano();
+    unlockAudio();
     musicPlaying = true;
-    musicButton.setAttribute("aria-pressed", "true");
-    musicButton.setAttribute("aria-label", "Tắt nhạc piano Happy Birthday");
-    musicButton.innerHTML = '♫ <span>Tắt piano</span>';
-    musicButton.classList.add("is-playing");
+    updateMusicButton("starting");
+    showMusicNotice();
+    // Call resume() directly from the user's click handler.
+    await audioContext.resume();
+    if (requestId !== musicRequestId || !musicPlaying) return;
+    if (audioContext.state !== "running") throw new Error(`AudioContext: ${audioContext.state}`);
+    updateMusicButton("playing");
     scheduleMelody();
   } catch (error) {
+    if (requestId === musicRequestId) {
+      stopMusic();
+      showMusicNotice("Chưa phát được nhạc. Hãy chạm ‘Bật piano’ một lần nữa và kiểm tra âm lượng điện thoại nhé ♫");
+    }
     console.warn("Không thể phát nhạc:", error);
+  } finally {
+    if (requestId === musicRequestId) musicStarting = false;
   }
+}
+
+function toggleMusic() {
+  if (musicPlaying && (musicStarting || audioContext?.state === "running")) {
+    stopMusic();
+    return;
+  }
+  startMusic();
+}
+
+function startExperience(withMusic) {
+  if (introScreen.hidden) return;
+  introScreen.hidden = true;
+  animateName();
+  if (withMusic) startMusic();
 }
 
 function createAmbientSpecks() {
@@ -689,6 +781,13 @@ pauseYearsButton.addEventListener("click", () => {
 });
 
 musicButton.addEventListener("click", toggleMusic);
+document.getElementById("openWithMusicButton").addEventListener("click", () => startExperience(true));
+document.getElementById("openSilentButton").addEventListener("click", () => startExperience(false));
+document.addEventListener("visibilitychange", () => {
+  if (!musicPlaying || !audioContext) return;
+  if (document.hidden) clearScheduledMusic();
+  else handleAudioStateChange();
+});
 document.getElementById("resetButton").addEventListener("click", resetEverything);
 document.getElementById("backToFlowersButton").addEventListener("click", resetEverything);
 blowCandlesButton.addEventListener("click", () => {
@@ -711,4 +810,4 @@ setInterval(() => {
   if (getCelebrationYear() !== celebrationYear) updateBirthdayInfo();
   else updateCountdown();
 }, 1000);
-animateName();
+// Start the greeting on a tap so the piano can play on Safari and Chrome mobile.
