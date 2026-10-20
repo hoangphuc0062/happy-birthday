@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#570a42" />
-    <meta name="description" content="Một bó hoa, một chiếc bánh kem và một lời chúc sinh nhật dành riêng cho Trần Ngọc Dạ Thảo." />
-    <title>Gửi Dạ Thảo — Happy Birthday ♡</title>
+    <meta name="description" content="Chúc mừng sinh nhật Dạ Thảo — 28/10. Chúc bạn nhiều niềm vui và may mắn." />
+    <title>Chúc mừng sinh nhật Dạ Thảo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -17,9 +17,9 @@
     <div class="intro-screen" id="introScreen" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introHint">
       <div class="intro-card">
         <div class="intro-symbol" aria-hidden="true">✿</div>
-        <p class="intro-eyebrow">MỘT MÓN QUÀ NHỎ · 28.10</p>
-        <h1 id="introTitle">Gửi Dạ Thảo <span>♡</span></h1>
-        <p id="introHint">Chạm để mở món quà, ngắm từng bông hoa nở và nghe giai điệu Happy Birthday bằng piano.</p>
+        <p class="intro-eyebrow">CHÚC MỪNG SINH NHẬT · 28/10</p>
+        <h1 id="introTitle">Chào Dạ Thảo!</h1>
+        <p id="introHint">Chạm để mở thiệp sinh nhật và nghe Happy Birthday bằng piano.</p>
         <button class="intro-play" id="openWithMusicButton" type="button">♫ Mở thiệp &amp; nghe piano</button>
         <button class="intro-silent" id="openSilentButton" type="button">Xem không có nhạc</button>
       </div>
@@ -65,9 +65,9 @@
 
         <div class="input-area">
           <div class="prompt-group" id="promptGroup">
-            <p class="eyebrow">MỘT ĐIỀU NHỎ BÉ DÀNH CHO EM</p>
-            <h1 id="flowerTitle">Một bó hoa dành riêng cho Dạ Thảo <span class="heart">♡</span></h1>
-            <p class="prompt-hint">Từng chữ trong tên em sẽ hóa thành một bông hoa...</p>
+            <p class="eyebrow">HAPPY BIRTHDAY · 28/10</p>
+            <h1 id="flowerTitle">Chúc mừng sinh nhật Dạ Thảo!</h1>
+            <p class="prompt-hint">Từng chữ trong tên bạn sẽ hóa thành một bông hoa...</p>
           </div>
 
           <div class="typed-name" id="typedName" aria-live="polite" aria-label="Tên Dạ Thảo đang tự xuất hiện từng chữ"></div>
@@ -79,16 +79,16 @@
           </div>
 
           <div class="keyboard-footer">
-            <p class="keyboard-tip" id="animationStatus">✦ Những bông hoa đang được kết dành tặng em...</p>
+            <p class="keyboard-tip" id="animationStatus">✦ Những bông hoa đang dần xuất hiện...</p>
           </div>
         </div>
       </section>
 
       <section class="scene scene-years" id="yearsScene" aria-labelledby="yearsTitle" hidden>
         <div class="years-content">
-          <p class="eyebrow">TỪNG NĂM TRÔI QUA · TỪNG MÙA HOA NỞ</p>
-          <h2 id="yearsTitle">Mỗi tuổi, một <em>bó hoa</em> ♡</h2>
-          <p class="years-intro" id="yearsIntro">Cùng ngược dòng qua những mùa sinh nhật của em...</p>
+          <p class="eyebrow">HOA NỞ · LỜI CHÚC SINH NHẬT</p>
+          <h2 id="yearsTitle">Một vài <em>lời chúc</em></h2>
+          <p class="years-intro" id="yearsIntro">Một vài lời chúc cho ngày sinh nhật vui vẻ.</p>
           <div class="years-bouquet-wrap" aria-hidden="true">
             <svg class="years-bouquet" viewBox="0 0 440 460" focusable="false">
               <defs>
@@ -108,11 +108,11 @@
             <span class="years-sparkle years-sparkle-two">✦</span>
           </div>
           <div class="year-caption" id="yearCaption" aria-live="off">
-            <p class="year-age" id="yearAge">Tuổi 19</p>
-            <p class="year-number" id="yearNumber">2026</p>
+            <p class="year-age" id="yearAge">Một lời chúc</p>
+            <p class="year-number" id="yearNumber">01</p>
             <p class="year-wish" id="yearWish"></p>
           </div>
-          <div class="years-progress" role="progressbar" aria-label="Tiến độ các năm sinh nhật" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="yearsProgress"><span id="yearsProgressFill"></span></div>
+          <div class="years-progress" role="progressbar" aria-label="Tiến độ các lời chúc" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="yearsProgress"><span id="yearsProgressFill"></span></div>
           <p class="years-count" id="yearsCount"></p>
           <div class="years-actions">
             <button class="secondary-button" id="pauseYearsButton" type="button" aria-pressed="false">Ⅱ Tạm dừng</button>
@@ -124,16 +124,16 @@
       <section class="scene scene-birthday" id="birthdayScene" aria-labelledby="birthdayTitle" hidden>
         <div class="birthday-content">
           <div class="birthday-heading">
-            <p class="eyebrow birthday-eyebrow" id="birthdayYearLabel">MỘT NGÀY THẬT ĐẶC BIỆT · 28.10.2026</p>
+            <p class="eyebrow birthday-eyebrow" id="birthdayYearLabel">CHÚC MỪNG SINH NHẬT · 28/10</p>
             <h2 id="birthdayTitle">Happy <em>Birthday</em></h2>
-            <p class="recipient">Trần Ngọc Dạ Thảo <span>♡</span></p>
+            <p class="recipient">Dạ Thảo</p>
           </div>
 
           <div class="cake-wrap" id="cakeWrap">
             <span class="cake-sparkle cake-sparkle-one" aria-hidden="true">✧</span>
             <span class="cake-sparkle cake-sparkle-two" aria-hidden="true">✦</span>
             <span class="cake-sparkle cake-sparkle-three" aria-hidden="true">✧</span>
-            <svg class="birthday-cake" id="birthdayCake" viewBox="0 0 500 395" role="img" aria-label="Bánh sinh nhật màu hồng có nến số 19">
+            <svg class="birthday-cake" id="birthdayCake" viewBox="0 0 500 395" role="img" aria-label="Bánh sinh nhật màu hồng với hai cây nến">
               <defs>
                 <linearGradient id="cakeSide" x1="0" x2="1" y1="0" y2="0">
                   <stop offset="0" stop-color="#e784aa" /><stop offset="0.48" stop-color="#ffb5c8" /><stop offset="1" stop-color="#d66d97" />
@@ -163,7 +163,10 @@
                 <g fill="#ffeb9b"><circle cx="230" cy="264" r="3"/><circle cx="271" cy="257" r="3"/><circle cx="350" cy="280" r="3"/><circle cx="147" cy="280" r="3"/></g>
               </g>
 
-              <text class="number-candles" id="ageCandleText" x="250" y="206" text-anchor="middle">19</text>
+              <g fill="url(#candlePink)" stroke="#ffe4ed" stroke-width="2">
+                <rect x="219" y="139" width="14" height="71" rx="4" />
+                <rect x="259" y="133" width="14" height="77" rx="4" />
+              </g>
               <g class="candle-flames" id="candleFlames">
                 <g class="flame-group" transform="translate(226 129)"><g class="flame-shape"><ellipse class="flame-glow" rx="15" ry="20" fill="#ffd18e" opacity=".2"/><path d="M0 -19 C-12 -6 -11 4 0 9 C11 4 12 -7 0 -19" fill="#ffe5a1"/><path d="M0 -10 C-6 -1 -5 5 0 7 C5 4 6 -2 0 -10" fill="#fff8e8"/></g></g>
                 <g class="flame-group flame-later" transform="translate(266 123)"><g class="flame-shape"><ellipse class="flame-glow" rx="15" ry="20" fill="#ffd18e" opacity=".2"/><path d="M0 -19 C-12 -6 -11 4 0 9 C11 4 12 -7 0 -19" fill="#ffe5a1"/><path d="M0 -10 C-6 -1 -5 5 0 7 C5 4 6 -2 0 -10" fill="#fff8e8"/></g></g>
@@ -172,10 +175,10 @@
           </div>
 
           <div class="birthday-footer">
-            <p class="birthday-date">28 <span>✳</span> 10 <span>✳</span> 2007</p>
+            <p class="birthday-date">28/10</p>
             <p class="birthday-countdown" id="birthdayCountdown" aria-live="off"></p>
-            <p class="birthday-message" id="birthdayMessage">Chúc em tuổi 19 luôn vui vẻ, bình an, được yêu thương thật nhiều và gặp toàn những điều dịu dàng nhất. 🌷</p>
-            <p class="wish-reveal" id="wishReveal" aria-live="polite">Điều ước của em đã bay đến những vì sao rồi! ✨</p>
+            <p class="birthday-message" id="birthdayMessage">Chúc mừng sinh nhật Dạ Thảo! Chúc bạn luôn vui vẻ, nhiều sức khỏe và gặp nhiều may mắn.</p>
+            <p class="wish-reveal" id="wishReveal" aria-live="polite">Chúc điều ước của bạn sớm thành hiện thực! ✨</p>
             <div class="birthday-actions">
               <button class="primary-button" id="blowCandlesButton" type="button">✦ Thổi nến & ước một điều</button>
               <button class="secondary-button" id="backToFlowersButton" type="button">← Xem lại bó hoa</button>

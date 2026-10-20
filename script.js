@@ -1,15 +1,16 @@
 "use strict";
 
-const TARGET_NAME = "Trần Ngọc Dạ Thảo";
-const BIRTH_YEAR = 2007;
+// Keep only the preferred name and birthday day/month in public source.
+const TARGET_NAME = "Dạ Thảo";
 const BIRTH_MONTH = 9; // October, zero-based for JavaScript dates.
 const BIRTH_DAY = 28;
+// Symbolic bouquets avoid disclosing or indirectly revealing her age.
+const FLOWER_STORY_COUNT = 6;
 // Reduce Motion should simplify visual effects, not speed up the birthday wishes.
 const YEAR_STORY_DURATION = 3800;
 const NAME_LETTER_DURATION = 520;
 const NAME_SPACE_DURATION = 300;
-// Each theme produces a distinct annual bouquet. Future years continue cycling
-// through the palettes while the arrangement and flower families also change.
+// Each calendar year shifts the bouquet palette and the wishes without using an age.
 const YEAR_THEMES = [
   { petals: ["#ffdee9", "#fa8db5", "#fff0f6"], accents: ["#ffc0d6", "#ffc5eb", "#f5a7c7"], center: "#ffe9a2" },
   { petals: ["#e5d2ff", "#c8a6ed", "#f5edff"], accents: ["#f2b4dc", "#fff4ff", "#aa81de"], center: "#ffe7a7" },
@@ -20,26 +21,21 @@ const YEAR_THEMES = [
   { petals: ["#c7e4b1", "#e8f4cc", "#f7fff0"], accents: ["#ffe1e8", "#d0eec1", "#b4daa3"], center: "#ffc978" },
   { petals: ["#efa4d9", "#f9d7f1", "#d7ace8"], accents: ["#f3b2c6", "#ffe8fa", "#f0c0fb"], center: "#f9dc92" }
 ];
-const YEAR_WISHES = [
-  "Một tuổi đầu đời, mong mọi điều quanh em đều ấm áp và dịu dàng như nắng sớm.",
-  "Tuổi 2, mong mỗi ngày của em đều đầy ắp tiếng cười và những cái ôm thật êm.",
-  "Tuổi 3, chúc cô bé nhỏ luôn tò mò trước những điều đẹp đẽ của thế giới.",
-  "Tuổi 4, mong những câu chuyện cổ tích luôn khép lại bằng nụ cười của em.",
-  "Tuổi 5, chúc em lớn lên trong sự yêu thương và những mùa hoa rực rỡ.",
-  "Tuổi 6, mong những bước chân đầu tiên đến lớp đều tràn ngập niềm vui.",
-  "Tuổi 7, chúc em luôn giữ được ánh mắt lấp lánh khi khám phá điều mới.",
-  "Tuổi 8, mong mỗi ước mơ bé xíu đều có chỗ để nảy mầm và vươn cao.",
-  "Tuổi 9, chúc em có thật nhiều bạn tốt và những ngày thơ ấu an nhiên.",
-  "Tuổi 10, mong hành trình đầu tiên của một tuổi hai chữ số thật rạng rỡ.",
-  "Tuổi 11, chúc em đủ can đảm để thử điều mới và đủ vui để là chính mình.",
-  "Tuổi 12, mong em tìm được niềm vui trong những điều giản dị nhất mỗi ngày.",
-  "Tuổi 13, chúc những năm tháng tuổi teen nhẹ nhàng như cánh hoa đang hé nở.",
-  "Tuổi 14, mong em luôn tự tin bước đi theo cách riêng thật đáng yêu của mình.",
-  "Tuổi 15, chúc em có những người bạn tốt và thật nhiều ký ức trong trẻo.",
-  "Tuổi 16, mong ước mơ của em lớn thêm một chút và nỗi buồn thì nhỏ lại.",
-  "Tuổi 17, chúc em vững vàng trước thử thách và luôn biết mỉm cười với bản thân.",
-  "Tuổi 18, mong những lựa chọn đầu tiên của tuổi trưởng thành đều nhiều hy vọng.",
-  "Tuổi 19, mong em được bình an, hạnh phúc và gặp thật nhiều điều dịu dàng. 🌷"
+const FLOWER_WISHES = [
+  "Chúc bạn luôn có thật nhiều năng lượng cho những điều mình yêu thích.",
+  "Mong những dự định sắp tới của bạn đều diễn ra thuận lợi.",
+  "Chúc bạn luôn giữ được sự tự tin và nét cá tính riêng.",
+  "Hy vọng mỗi ngày đều có một chuyện nhỏ khiến bạn vui.",
+  "Chúc bạn gặp nhiều người tốt và có những trải nghiệm đáng nhớ.",
+  "Mong một năm mới có thêm thật nhiều kỷ niệm đẹp.",
+  "Chúc bạn luôn vững vàng trước các thử thách mới.",
+  "Hy vọng mọi kế hoạch của bạn đều tiến triển theo ý muốn."
+];
+const BIRTHDAY_WISHES = [
+  "Chúc mừng sinh nhật Dạ Thảo! Chúc bạn luôn vui vẻ, nhiều sức khỏe và gặp nhiều may mắn.",
+  "Chúc mừng sinh nhật Dạ Thảo! Mong những dự định trong năm mới của bạn đều suôn sẻ.",
+  "Happy Birthday, Dạ Thảo! Chúc bạn có một ngày thật vui và một năm nhiều trải nghiệm thú vị.",
+  "Chúc mừng sinh nhật Dạ Thảo! Chúc bạn thật nhiều niềm vui, sức khỏe và thành công."
 ];
 const ROWS = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
 const PALETTES = [
@@ -76,7 +72,7 @@ const birthdayCountdown = document.getElementById("birthdayCountdown");
 const birthdayYearLabel = document.getElementById("birthdayYearLabel");
 const birthdayMessage = document.getElementById("birthdayMessage");
 const birthdayCake = document.getElementById("birthdayCake");
-const ageCandleText = document.getElementById("ageCandleText");
+
 const promptArea = document.querySelector(".input-area");
 const typedName = document.getElementById("typedName");
 const keyboard = document.getElementById("flowerKeyboard");
@@ -97,7 +93,7 @@ let nextSceneTimer = null;
 let yearTimer = null;
 let yearStep = 0;
 let yearStoryPaused = false;
-let celebrationYear = 2026;
+let celebrationYear = getCelebrationYear();
 let confetti = [];
 let animationFrame = null;
 let candlesBlown = false;
@@ -208,7 +204,7 @@ function createKeyboard() {
 }
 
 function makeBouquetFlower(letter, index, year = null) {
-  const variant = year === null ? 0 : year - BIRTH_YEAR;
+  const variant = year === null ? 0 : year;
   const placement = year === null ? index : (index * [3, 5, 9, 11][variant % 4] + variant * 2) % 14;
   const [baseX, baseY] = POSITIONS[placement];
   const x = baseX + (year === null ? 0 : Math.sin(variant * 1.7 + index) * 14);
@@ -288,36 +284,20 @@ function stopSequence() {
 function getCelebrationYear(now = new Date()) {
   const hasPassed = now.getMonth() > BIRTH_MONTH ||
     (now.getMonth() === BIRTH_MONTH && now.getDate() > BIRTH_DAY);
-  return Math.max(BIRTH_YEAR + 1, now.getFullYear() + (hasPassed ? 1 : 0));
-}
-
-function getYearWish(age) {
-  if (age <= YEAR_WISHES.length) return YEAR_WISHES[age - 1];
-  const wishes = [
-    "Mong em có thêm thật nhiều lý do để mỉm cười và luôn được là chính mình.",
-    "Chúc em bình yên trong tim, vững vàng trên đường đi và dịu dàng với bản thân.",
-    "Mong tuổi mới mang đến những cuộc gặp gỡ đẹp và những cơ hội xứng đáng.",
-    "Chúc những ước mơ em đang giữ sẽ dần trở thành những điều có thật.",
-    "Mong mọi ngày trong tuổi mới của em đều có chút nắng, chút hoa và thật nhiều niềm vui."
-  ];
-  return `Tuổi ${age}, ${wishes[(age - YEAR_WISHES.length - 1) % wishes.length]}`;
+  return now.getFullYear() + (hasPassed ? 1 : 0);
 }
 
 function updateBirthdayInfo() {
   celebrationYear = getCelebrationYear();
-  const age = celebrationYear - BIRTH_YEAR;
-  birthdayYearLabel.textContent = `MỘT NGÀY THẬT ĐẶC BIỆT · 28.10.${celebrationYear}`;
-  birthdayCake.setAttribute("aria-label", `Bánh sinh nhật màu hồng với nến số ${age}`);
-  ageCandleText.textContent = age;
-  birthdayMessage.textContent = age === 19
-    ? "Chúc em tuổi 19 luôn vui vẻ, bình an, được yêu thương thật nhiều và gặp toàn những điều dịu dàng nhất. 🌷"
-    : `Chúc mừng sinh nhật tuổi ${age}, Dạ Thảo! ${getYearWish(age).replace(/^Tuổi \d+,?\s*/, "")} ♡`;
+  birthdayYearLabel.textContent = "CHÚC MỪNG SINH NHẬT · 28/10";
+  birthdayCake.setAttribute("aria-label", "Bánh sinh nhật màu hồng với hai cây nến");
+  birthdayMessage.textContent = BIRTHDAY_WISHES[celebrationYear % BIRTHDAY_WISHES.length];
   updateCountdown();
 }
 
 function updateCountdown(now = new Date()) {
   if (now.getMonth() === BIRTH_MONTH && now.getDate() === BIRTH_DAY) {
-    birthdayCountdown.textContent = `✧ Hôm nay là sinh nhật tuổi ${now.getFullYear() - BIRTH_YEAR} của em!`;
+    birthdayCountdown.textContent = "✧ Hôm nay là sinh nhật Dạ Thảo!";
     return;
   }
   const targetYear = getCelebrationYear(now);
@@ -328,7 +308,7 @@ function updateCountdown(now = new Date()) {
   const minutes = Math.floor(seconds / 60) % 60;
   const secs = seconds % 60;
   const pad = value => String(value).padStart(2, "0");
-  birthdayCountdown.textContent = `♡ Còn ${days} ngày · ${pad(hours)} giờ · ${pad(minutes)} phút · ${pad(secs)} giây đến sinh nhật tuổi ${targetYear - BIRTH_YEAR}`;
+  birthdayCountdown.textContent = `Còn ${days} ngày · ${pad(hours)} giờ · ${pad(minutes)} phút · ${pad(secs)} giây đến 28/10`;
 }
 
 function stopYearStory() {
@@ -345,19 +325,18 @@ function scheduleNextYear() {
   if (yearStoryPaused) return;
   yearTimer = setTimeout(() => {
     yearStep++;
-    if (yearStep >= celebrationYear - BIRTH_YEAR) showBirthday();
+    if (yearStep >= FLOWER_STORY_COUNT) showBirthday();
     else showYearStep();
   }, YEAR_STORY_DURATION);
 }
 
 function showYearStep() {
-  const year = celebrationYear - yearStep;
-  const age = year - BIRTH_YEAR;
-  const total = celebrationYear - BIRTH_YEAR;
-  yearNumber.textContent = year;
-  yearAge.textContent = `✧ Tuổi ${age}`;
-  yearWish.textContent = getYearWish(age);
-  yearCount.textContent = `Mùa hoa ${yearStep + 1} / ${total} · Đang trở về những năm tháng đầu đời`;
+  const year = celebrationYear + yearStep;
+  const total = FLOWER_STORY_COUNT;
+  yearNumber.textContent = String(yearStep + 1).padStart(2, "0");
+  yearAge.textContent = "✧ Một lời chúc";
+  yearWish.textContent = FLOWER_WISHES[year % FLOWER_WISHES.length];
+  yearCount.textContent = `Mùa hoa ${yearStep + 1} / ${total}`;
   const percent = Math.round((yearStep + 1) / total * 100);
   yearsProgress.setAttribute("aria-valuenow", percent);
   yearsProgressFill.style.width = `${percent}%`;
@@ -380,7 +359,7 @@ function showYears() {
   updateBirthdayInfo();
   yearStep = 0;
   document.getElementById("yearsIntro").textContent =
-    `Từ ${celebrationYear} ngược về ${BIRTH_YEAR + 1} — mỗi năm một bó hoa và một lời chúc dành riêng cho em.`;
+    "Một vài lời chúc cho ngày sinh nhật vui vẻ.";
   flowerScene.hidden = true;
   birthdayScene.hidden = true;
   yearsScene.hidden = false;
@@ -398,7 +377,7 @@ function animateName() {
   let index = 0;
   const typeNext = () => {
     if (index >= TARGET_NAME.length) {
-      animationStatus.textContent = "♡ Một bó hoa dành riêng cho em đã hoàn thành";
+      animationStatus.textContent = "✦ Những bông hoa đã nở!";
       nextSceneTimer = setTimeout(showYears, 3300);
       return;
     }
@@ -795,7 +774,7 @@ blowCandlesButton.addEventListener("click", () => {
   candlesBlown = true;
   cakeWrap.classList.add("candles-out");
   wishReveal.classList.add("visible");
-  blowCandlesButton.textContent = "♡ Điều ước đã được gửi đi";
+  blowCandlesButton.textContent = "✦ Chúc điều ước thành hiện thực!";
   blowCandlesButton.disabled = true;
   launchConfetti(170);
 });
